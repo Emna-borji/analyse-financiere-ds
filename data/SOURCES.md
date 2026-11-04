@@ -28,17 +28,42 @@ copies « défauts injectés ») sont également listés.
 
 ---
 
+## `data/ch1/Entreprise_E_Services_annees_en_lignes.xlsx`
+
+- **Synthétique** généré par `scripts/gen_entreprise_e.py` (généré ad-hoc).
+- Date de génération : 2026-11-04.
+- Rôle : tester l'adaptateur « années en lignes » sur une société de services
+  avec **capitaux propres négatifs** (test du garde-fou `non significatif` pour
+  ROE / endettement / autonomie / gearing).
+- Défauts volontaires intégrés :
+  * 2020 : `actif_total` manquant → le contrôle qualité renvoie `Bloquant`.
+  * 2021 : déséquilibre A/P de 10 TND (sous le seuil 1 % donc tolérable, mais
+    l'écart est bien capté par le contrôle).
+  * 2022–2023 : capitaux propres négatifs (−100 puis −1 150).
+
+Ce fichier n'est pas une donnée réelle. Les candidats réels pour l'entreprise E
+(WeWork, Peloton, Yelp historique) restent à télécharger depuis SEC EDGAR.
+
+## `data/ch1/benchmark_sectoriel_synthetique.csv`
+
+- **Reconstitué** à partir des sources publiques Damodaran Online
+  (<https://pages.stern.nyu.edu/~adamodar/>, janv. 2024) et BACH
+  (Banque de France, <https://www.bach.banque-france.fr/>, 2023).
+- Date de reconstitution : 2026-11-04.
+- Couverture : Services, Distribution, Industrie — Q1, médiane, Q3 par ratio.
+- Rôle : fichier de repli du benchmark quand les API ne sont pas accessibles.
+
+---
+
 ## Fichiers à venir (lots suivants)
 
-Les fichiers des entreprises B, C, D, E et le benchmark seront ajoutés après
-sélection et validation par l'étudiant. Chacun aura :
+Les fichiers réels des entreprises B (Monoprix PDF), C (industrie IFRS SEC),
+D (société US EDGAR), E (société US CP négatifs via EDGAR) seront ajoutés après
+sélection et validation. Chacun aura :
 
 - URL exacte de téléchargement,
 - date de téléchargement,
-- licence ou conditions d'usage (Creative Commons, domaine public, usage libre
-  non commercial…),
+- licence ou conditions d'usage,
 - taux de change USD → TND utilisé si conversion (source + date du taux).
 
-Les copies « défauts injectés » (déséquilibre A/P de 10, valeur manquante) seront
-nommées `defauts_injectes_<fichier_source>.<ext>` et conserveront la provenance
-originale dans leur en-tête.
+Les copies « défauts injectés » seront nommées `defauts_injectes_<fichier_source>.<ext>`.
