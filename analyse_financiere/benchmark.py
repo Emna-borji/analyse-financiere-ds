@@ -110,24 +110,30 @@ def feu_benchmark(
 
 
 # --------------------------------------------- SEC EDGAR Frames API ----
-_ENDPOINT_FRAMES = "https://data.sec.gov/api/xbrl/frames/us-gaap/{concept}/{unit}/CY{annee}Q4I.json"
+_ENDPOINT_FRAMES_INSTANT = "https://data.sec.gov/api/xbrl/frames/us-gaap/{concept}/{unit}/CY{annee}Q{trimestre}I.json"
+_ENDPOINT_FRAMES_FLUX = "https://data.sec.gov/api/xbrl/frames/us-gaap/{concept}/{unit}/CY{annee}.json"
 
 
 def charger_edgar_frames(
     concept: str,
     annee: int,
     unit: str = "USD",
+    nature: str = "instant",  # "instant" (bilan) ou "flux" (resultat)
+    trimestre: int = 4,
     user_agent: Optional[str] = None,
     cache_dir: Optional[str | Path] = None,
 ) -> list[dict]:
     """Télécharge une 'frame' SEC EDGAR : un concept XBRL pour toutes les sociétés.
 
-    Exemples de concepts : 'Assets', 'Revenues', 'NetIncomeLoss'.
-    L'URL est l'endpoint 'frames' du module data.sec.gov. User-Agent
-    descriptif OBLIGATOIRE (sinon la SEC bloque).
+    Deux endpoints selon la nature du concept :
+    - `instant` (bilan, ex. Assets, Liabilities, StockholdersEquity) →
+      URL `/CYyyyyQnI.json` (snapshot à la date de fin de trimestre).
+    - `flux` (résultat ou flux de trésorerie, ex. Revenues, NetIncomeLoss) →
+      URL `/CYyyyy.json` (agrégat sur l'exercice complet).
 
-    Cache : si `cache_dir` est fourni, la réponse est écrite / lue sur disque.
-    Respect du débit : la SEC limite à 10 req/s. On temporise 0,15 s.
+    User-Agent descriptif OBLIGATOIRE (sinon la SEC bloque). Respect du
+    débit : 0,15 s entre appels (soit ~6,6 req/s, sous la limite SEC de 10).
+    Cache local si `cache_dir` est fourni.
     """
     import requests
 
@@ -137,12 +143,23 @@ def charger_edgar_frames(
             "EDGAR requiert un User-Agent descriptif. Renseignez-le "
             "dans l'environnement (variable EDGAR_USER_AGENT)."
         )
-    url = _ENDPOINT_FRAMES.format(concept=concept, unit=unit, annee=annee)
 
+    if nature == "instant":
+        url = _ENDPOINT_FRAMES_INSTANT.format(
+            concept=concept, unit=unit, annee=annee, trimestre=trimestre,
+        )
+        cache_suffixe = f"{concept}_{unit}_{annee}Q{trimestre}I"
+    elif nature == "flux":
+        url = _ENDPOINT_FRAMES_FLUX.format(concept=concept, unit=unit, annee=annee)
+        cache_suffixe = f"{concept}_{unit}_{annee}"
+    else:
+        raise ValueError("nature doit valoir 'instant' ou 'flux'")
+
+    cache = None
     if cache_dir:
         cache_dir = Path(cache_dir)
         cache_dir.mkdir(parents=True, exist_ok=True)
-        cache = cache_dir / f"frame_{concept}_{unit}_{annee}.json"
+        cache = cache_dir / f"frame_{cache_suffixe}.json"
         if cache.exists():
             with cache.open(encoding="utf-8") as f:
                 return json.load(f).get("data", [])
@@ -152,7 +169,7 @@ def charger_edgar_frames(
     resp.raise_for_status()
     data = resp.json()
 
-    if cache_dir:
+    if cache:
         cache.write_text(json.dumps(data), encoding="utf-8")
 
     return data.get("data", [])

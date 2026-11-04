@@ -1,0 +1,5 @@
+secteur,ratio,q1,mediane,q3,source
+US_toutes_societes,roa,-0.33799879700286173,-0.0009158926922264066,0.044123754882087335,"SEC EDGAR Frames API (us-gaap), telecharge 2026-11-04"
+US_toutes_societes,roe,-0.3389710176231659,0.02261971237905182,0.12596793543461665,"SEC EDGAR Frames API (us-gaap), telecharge 2026-11-04"
+US_toutes_societes,marge_nette,-0.3758821241997117,0.00022295076455680258,0.09450372732548026,"SEC EDGAR Frames API (us-gaap), telecharge 2026-11-04"
+US_toutes_societes,autonomie_financiere,0.24198705672819532,0.44976401423363044,0.6744117649192837,"SEC EDGAR Frames API (us-gaap), telecharge 2026-11-04"

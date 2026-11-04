@@ -53,6 +53,26 @@ Ce fichier n'est pas une donnée réelle. Les candidats réels pour l'entreprise
 - Couverture : Services, Distribution, Industrie — Q1, médiane, Q3 par ratio.
 - Rôle : fichier de repli du benchmark quand les API ne sont pas accessibles.
 
+## `data/ch1/benchmark_edgar_frames_2023.csv`
+
+- **Télécharge depuis SEC EDGAR Frames API** (<https://data.sec.gov/>).
+- Date de téléchargement : 2026-11-04.
+- Concepts XBRL utilisés :
+  - `Assets` (instant Q4) — 6 430 sociétés ;
+  - `StockholdersEquity` (instant Q4) — 6 275 sociétés ;
+  - `RevenueFromContractWithCustomerExcludingAssessedTax` (flux annuel)
+    — 3 142 sociétés (balise ASC 606) ;
+  - `NetIncomeLoss` (flux annuel) — 6 389 sociétés.
+- Ratios dérivés : ROA, ROE, marge nette, autonomie financière.
+- Population : **toutes les sociétés US ayant déposé un 10-K pour
+  l'exercice fiscal 2023**. Aucun filtrage sectoriel (biais small cap
+  déficitaire sur ROA médian proche de 0 %).
+- Script d'actualisation :
+  `EDGAR_USER_AGENT="Nom (email)" python -m scripts.actualiser_benchmark_edgar 2023`
+- Licence : données publiques SEC, utilisation libre avec User-Agent
+  descriptif (cf. <https://www.sec.gov/os/accessing-edgar-data>).
+- Cache local des frames brutes : `.cache/edgar/` (gitignoré, ~3,7 MB).
+
 ---
 
 ## Fichiers à venir (lots suivants)
