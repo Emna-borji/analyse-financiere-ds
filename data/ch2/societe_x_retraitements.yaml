@@ -1,0 +1,63 @@
+# Informations complémentaires de la Société X
+# ------------------------------------------------------------------------------
+# Source : docs/Chapitre_2_Analyse_fonctionnelle.pdf, Partie B, page 6
+#          (tableau des informations complémentaires + paragraphe suivant)
+# Montants en TND, sauf mention contraire. Les signes suivent la convention
+# comptable (positif = ressource ou charge selon le contexte).
+#
+# Ces données sont utilisées par le moteur de reclassement (ch.2) pour :
+#   - identifier la part hors exploitation des « Autres actifs/passifs courants »,
+#   - retraiter le crédit-bail (ES + RS en valeurs brutes),
+#   - retraiter les effets escomptés non échus (BFR + TP),
+#   - alimenter la cascade des SIG et le calcul de la CAF.
+#
+# NOTE pédagogique :
+#   La CAF méthode soustractive utilise : EBE − charges fin. nettes + autres gains
+#   ordinaires − autres pertes ordinaires − impôt. Les valeurs ci-dessous
+#   permettent de reproduire exactement le corrigé C2 (ch.2).
+# ------------------------------------------------------------------------------
+
+entreprise: Societe_X
+devise: TND
+source: "docs/Chapitre_2_Analyse_fonctionnelle.pdf, partie B, page 6"
+
+exercices:
+
+  "2022":
+    # --- Ventilation hors exploitation des postes courants (bilan) ---
+    pret_societe_soeur_dans_autres_actifs_courants: 0
+    dettes_acquisitions_immos_dans_autres_passifs_courants: 0
+
+    # --- Hors bilan ---
+    eene_hors_bilan: 50000  # Effets escomptés non échus
+
+    # --- Crédit-bail matériel non inscrit à l'actif ---
+    # Contrat conclu début 2022, durée 5 ans, amortissement linéaire.
+    credit_bail_valeur_origine: 600000
+    credit_bail_amort_cumules: 120000  # 1 an d'amortissement sur 5
+    credit_bail_duree_annees: 5
+
+    # --- Éléments de l'état de résultat utiles aux SIG / CAF ---
+    autres_gains_ordinaires: 28863
+    autres_pertes_ordinaires: 18509
+    charges_financieres_nettes: 1146
+
+  "2023":
+    pret_societe_soeur_dans_autres_actifs_courants: 250000
+    dettes_acquisitions_immos_dans_autres_passifs_courants: 120000
+
+    eene_hors_bilan: 80000
+
+    credit_bail_valeur_origine: 600000
+    credit_bail_amort_cumules: 240000  # 2 ans d'amortissement sur 5
+    credit_bail_duree_annees: 5
+
+    autres_gains_ordinaires: 15198
+    autres_pertes_ordinaires: 787
+    charges_financieres_nettes: 221611
+
+# Hypothèses de classement explicites, conformes à la partie B du PDF.
+hypotheses:
+  - "Les « Autres charges d'exploitation » de l'état de résultat sont considérées comme des consommations en provenance des tiers (p.6)."
+  - "Les autres gains et pertes ordinaires sont encaissés / décaissés — pas de plus-value de cession identifiée dans le dossier."
+  - "La valeur résiduelle de la dette de crédit-bail est reconstituée par : valeur_origine − amortissements_cumules (ce qui reste à amortir / rembourser à la date du bilan)."

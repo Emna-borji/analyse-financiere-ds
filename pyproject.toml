@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "analyse-financiere-ds"
+version = "0.1.0"
+description = "Mini-projets 1 & 2 du cours Analyse Financière (Master Data Science) : FinRatio Engine (ratios) + FuncBalance (bilan fonctionnel)"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [
+    { name = "Aymen Borgi", email = "aymen.borgi2@gmail.com" },
+]
+license = { text = "MIT" }
+dependencies = [
+    "pydantic>=2.5,<3",
+    "pandas>=2.0",
+    "openpyxl>=3.1",
+    "PyYAML>=6.0",
+    "rapidfuzz>=3.0",
+    "Jinja2>=3.1",
+    "requests>=2.31",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[tool.setuptools.packages.find]
+include = ["analyse_financiere*"]
+exclude = ["tests*", "_base_v1*"]

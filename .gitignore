@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Environnement virtuel
+.venv/
+venv/
+env/
+
+# Secrets et config locale
+.env
+.env.local
+
+# Legacy — ancien projet BilanLens, lecture seule, non distribué
+_base_v1/
+
+# Cache des réponses d'API (EDGAR, FMP…)
+.cache/
+data/.cache/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Fichiers temporaires de l'étudiant
+scratch/
+notebooks/.ipynb_checkpoints/

@@ -1,0 +1,146 @@
+# Fichier de ratios déclaratif — annexe 2 ch.1 (format hypothèse).
+# Chaque ratio : id, famille, formule (AST restreint), sens favorable,
+# unité (ratio, pourcentage, jours), repère optionnel, garde-fous.
+#
+# Variables disponibles dans les formules : tous les champs du schéma pivot.
+# Variable spéciale : `achats_ttc` = (achats_approvisionnements + autres_charges_exploitation) * 1.19
+# (TVA à 19 %, conforme à la base de calcul du DPO indiquée dans le PDF ch.1 partie B).
+
+# =============================================================================
+# FAMILLE : LIQUIDITÉ
+# =============================================================================
+- id: liquidite_generale
+  famille: liquidite
+  formule: "actifs_courants / passifs_courants"
+  sens_favorable: plus_haut
+  unite: ratio
+  repere: { seuil: 1.0, operateur: ">" }
+
+- id: liquidite_reduite
+  famille: liquidite
+  formule: "(actifs_courants - stocks) / passifs_courants"
+  sens_favorable: plus_haut
+  unite: ratio
+  repere: { seuil: 1.0, operateur: "~" }
+
+- id: liquidite_immediate
+  famille: liquidite
+  formule: "liquidites / passifs_courants"
+  sens_favorable: plus_haut
+  unite: ratio
+  repere: { seuil: 0.2, operateur: ">" }
+
+# =============================================================================
+# FAMILLE : STRUCTURE FINANCIÈRE / ENDETTEMENT
+# =============================================================================
+- id: endettement_global
+  famille: structure
+  formule: "total_dettes / capitaux_propres"
+  sens_favorable: plus_bas
+  unite: ratio
+  repere: { seuil: 1.0, operateur: "<" }
+  garde_fou:
+    capitaux_propres_negatifs: non_significatif
+
+- id: autonomie_financiere
+  famille: structure
+  formule: "capitaux_propres / total_passif"
+  sens_favorable: plus_haut
+  unite: pourcentage
+  repere: { seuil: 0.33, operateur: ">" }
+  garde_fou:
+    capitaux_propres_negatifs: non_significatif
+
+- id: gearing
+  famille: structure
+  formule: "(dettes_financieres_lt + dettes_financieres_ct - liquidites) / capitaux_propres"
+  sens_favorable: plus_bas
+  unite: ratio
+  garde_fou:
+    capitaux_propres_negatifs: non_significatif
+
+- id: dette_nette_ebitda
+  famille: structure
+  formule: "(dettes_financieres_lt + dettes_financieres_ct - liquidites) / (ebit + dotations)"
+  sens_favorable: plus_bas
+  unite: annees
+  repere: { seuil: 3.0, operateur: "<" }
+
+- id: couverture_interets
+  famille: structure
+  formule: "ebit / charges_financieres"
+  sens_favorable: plus_haut
+  unite: ratio
+  repere: { seuil: 3.0, operateur: ">" }
+
+# =============================================================================
+# FAMILLE : RENTABILITÉ
+# =============================================================================
+- id: marge_nette
+  famille: rentabilite
+  formule: "resultat_net / ca"
+  sens_favorable: plus_haut
+  unite: pourcentage
+
+- id: marge_operationnelle
+  famille: rentabilite
+  formule: "ebit / ca"
+  sens_favorable: plus_haut
+  unite: pourcentage
+
+- id: marge_ebitda
+  famille: rentabilite
+  formule: "(ebit + dotations) / ca"
+  sens_favorable: plus_haut
+  unite: pourcentage
+
+- id: roe
+  famille: rentabilite
+  formule: "resultat_net / capitaux_propres"
+  sens_favorable: plus_haut
+  unite: pourcentage
+  garde_fou:
+    capitaux_propres_negatifs: non_significatif
+
+- id: roa
+  famille: rentabilite
+  formule: "resultat_net / actif_total"
+  sens_favorable: plus_haut
+  unite: pourcentage
+
+# =============================================================================
+# FAMILLE : ACTIVITÉ / CYCLE D'EXPLOITATION
+# =============================================================================
+- id: rotation_actif
+  famille: activite
+  formule: "ca / actif_total"
+  sens_favorable: plus_haut
+  unite: ratio
+
+- id: dso
+  famille: activite
+  formule: "(clients_bruts / ca) * 365"
+  sens_favorable: plus_bas
+  unite: jours
+
+- id: dpo
+  famille: activite
+  formule: "(fournisseurs / achats_ttc) * 365"
+  sens_favorable: plus_bas
+  unite: jours
+
+# Note : le DIO (délai stocks) n'a pas de sens pour la Société X (pas de stocks).
+# Il sera calculé automatiquement pour les entreprises qui en ont (Monoprix).
+- id: dio
+  famille: activite
+  formule: "(stocks / achats_ttc) * 365"
+  sens_favorable: plus_bas
+  unite: jours
+  garde_fou:
+    stocks_nuls: non_applicable
+
+- id: taux_effectif_impot
+  famille: rentabilite
+  formule: "impot_benefices / rcai"
+  sens_favorable: neutre
+  unite: pourcentage

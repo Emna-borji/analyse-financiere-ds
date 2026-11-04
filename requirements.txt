@@ -1,0 +1,25 @@
+# Lot 0 — dépendances minimales.
+# Les lots suivants pourront ajouter : streamlit, plotly, matplotlib, hypothesis,
+# sentence-transformers (option avancée du lot 2), jinja2 déjà présent pour le lot 6.
+
+# Schéma pivot + validation
+pydantic>=2.5,<3
+
+# Lecture Excel SCE (.xlsx uniquement, pas de .xls)
+pandas>=2.0
+openpyxl>=3.1
+
+# Configuration déclarative (ratios, reclassement, mapping)
+PyYAML>=6.0
+
+# Mapping sémantique des libellés (lot 2)
+rapidfuzz>=3.0
+
+# Commentaire automatique (lot 6)
+Jinja2>=3.1
+
+# Benchmark par API (lot 5)
+requests>=2.31
+
+# Tests
+pytest>=8.0

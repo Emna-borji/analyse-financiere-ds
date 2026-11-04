@@ -1,0 +1,80 @@
+# Règles de reclassement — annexe ch.2 (format hypothèse).
+#
+# Chaque entrée : un champ pivot est soit affecté entièrement à une masse
+# fonctionnelle, soit ventilé par parts (quand une partie du poste a un
+# usage hors exploitation).
+#
+# Masses fonctionnelles :
+#   emplois_stables (ES), ressources_stables (RS),
+#   actif_circulant_exploitation (ACE), actif_circulant_hors_exploitation (ACHE),
+#   passif_circulant_exploitation (PCE), passif_circulant_hors_exploitation (PCHE),
+#   tresorerie_active (TA), tresorerie_passive (TP).
+
+regles:
+  # --- Emplois stables (valeurs BRUTES, invariant du bilan fonctionnel) ---
+  immobilisations_incorporelles_brutes:
+    masse: emplois_stables
+  immobilisations_corporelles_brutes:
+    masse: emplois_stables
+  immobilisations_financieres:
+    masse: emplois_stables
+  autres_actifs_non_courants:
+    masse: emplois_stables
+
+  # --- Ressources stables ---
+  capitaux_propres:
+    masse: ressources_stables
+  amortissements_cumules:
+    masse: ressources_stables
+  provisions_clients:
+    masse: ressources_stables
+  provisions_risques_charges:
+    masse: ressources_stables
+  dettes_financieres_lt:
+    masse: ressources_stables
+
+  # --- Actif circulant d'exploitation ---
+  stocks:
+    masse: actif_circulant_exploitation
+  clients_bruts:
+    masse: actif_circulant_exploitation
+
+  # --- Autres actifs courants : mixte, on retire la part hors exploitation ---
+  autres_actifs_courants:
+    ventilation:
+      - masse: actif_circulant_hors_exploitation
+        source: pret_societe_soeur
+      - masse: actif_circulant_exploitation
+        source: "reste"
+
+  # --- Passifs ---
+  fournisseurs:
+    masse: passif_circulant_exploitation
+
+  autres_passifs_courants:
+    ventilation:
+      - masse: passif_circulant_hors_exploitation
+        source: dettes_acquisitions_immos
+      - masse: passif_circulant_exploitation
+        source: "reste"
+
+  # --- Trésorerie ---
+  liquidites:
+    masse: tresorerie_active
+  dettes_financieres_ct:
+    masse: tresorerie_passive
+
+# Retraitements à appliquer APRÈS le reclassement de base (lot 5 ch.2).
+retraitements:
+  credit_bail:
+    description: "Crédit-bail matériel non inscrit à l'actif : on inscrit la valeur d'origine en emplois stables (brutes), les amortissements théoriques cumulés en ressources stables, la dette résiduelle en ressources stables (dettes financières)."
+    operations:
+      - { masse: emplois_stables, source: credit_bail_valeur_origine, signe: +1 }
+      - { masse: ressources_stables, source: credit_bail_amort_cumules, signe: +1 }
+      - { masse: ressources_stables, source: credit_bail_dette_residuelle, signe: +1 }
+
+  effets_escomptes_non_echus:
+    description: "Ajouter aux créances clients (ACE) et à la trésorerie passive. BFR en hausse, TN en baisse du même montant. FRNG inchangé."
+    operations:
+      - { masse: actif_circulant_exploitation, source: eene, signe: +1 }
+      - { masse: tresorerie_passive, source: eene, signe: +1 }
