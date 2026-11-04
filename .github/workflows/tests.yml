@@ -22,7 +22,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install pytest
+          pip install -e .
 
       - name: Run pytest (skip real / network / ocr)
         run: pytest -v -m "not real and not network and not ocr"
