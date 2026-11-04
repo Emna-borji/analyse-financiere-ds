@@ -122,15 +122,57 @@ Autres capitaux propres 2022 dans le PDF 2023).
 
 ---
 
+## `data/ch1/bvmt_pdfs/artes_2023.pdf` et `artes_2022.pdf`
+
+Etats financiers **individuels** annuels de la société **Automobile Réseau
+Tunisien & Service (ARTES)**, cotée BVMT (secteur distribution automobile).
+
+- URL 2023 : <https://bvmt.com.tn/sites/default/files/societes/artes/etats-financiers/artes-etats-financiers-annuels-individuels-31-12-2023.pdf>
+- URL 2022 : <https://bvmt.com.tn/sites/default/files/societes/artes/etats-financiers/artes-etats-financiers-annuels-individuels-31-12-2022.pdf>
+- **Date de téléchargement** : 2026-11-04.
+- **Format** : SCE tunisien, dinars tunisiens (unité).
+- **Exercices couverts** : 2021 + 2022 (PDF 2022) et 2022 + 2023 (PDF 2023).
+- **Vérification** : Capital 2023 = 38 250 000, RN 2023 = 27 126 932.
+  Total actifs non courants structure cohérente (immobilisations
+  incorporelles brutes, amortissements, net).
+- **Rôle dans le projet** : jeu de données réel supplémentaire pour
+  tester l'adaptateur PDF sur un autre secteur (concessionnaire
+  automobile). L'adaptateur `monoprix_pdf.py` pourra être généralisé.
+- **Licence** : document public BVMT (publication réglementaire).
+
+## `data/ch1/bvmt_pdfs/sam_2023.pdf`
+
+Etats financiers **individuels** 2023 de la **Société Atelier du Meuble
+intérieurs (SAM)**, industrie du meuble.
+
+- URL : <https://bvmt.com.tn/sites/default/files/societes/sam/etats-financiers/sam-etats-financiers-annuels-individuels-31-12-2023.pdf>
+- Date de téléchargement : 2026-11-04.
+- Format : SCE tunisien, dinars tunisiens.
+- Rôle : variété sectorielle (industrie manufacturière) pour future
+  comparaison inter-secteur.
+
+## `data/ch1/edgar_companyfacts/CIK0000104169_walmart.json`
+
+**Walmart Inc.** (CIK 104169) via l'API SEC EDGAR companyfacts.
+
+- URL : <https://data.sec.gov/api/xbrl/companyfacts/CIK0000104169.json>
+- **Date de téléchargement** : 2026-11-04.
+- **Format** : JSON XBRL US GAAP (une entrée par (concept, filing, unit)).
+- **Rôle** : démonstration de :
+  - la **déduplication** : pour un couple (concept, end-date), plusieurs
+    valeurs existent (10-K original, 10-K/A amendement, 10-Q comparatifs
+    postérieurs). `scripts/extract_walmart.py` retient le filing le
+    plus récent (max `filed`) ;
+  - la **conversion USD → TND** avec taux documenté : 1 USD =
+    **3,1217 TND** au 31/01/2024 (source : Banque Centrale de Tunisie,
+    cours de référence).
+- **Exercice fiscal Walmart** : FY2024 clôturé au 31 janvier 2024
+  (exercice décalé, pas calendaire). Grandeurs clés extraites :
+  Assets = 252,4 Mrd USD, Revenus = 642,6 Mrd USD, RN = 15,5 Mrd USD.
+- **Tests** : `tests/test_walmart_extract.py` (6 tests passent sans réseau).
+- **Licence** : données publiques SEC (utilisation libre avec User-Agent
+  descriptif).
+
 ## Fichiers à venir (lots suivants)
-
-Les fichiers réels des entreprises B (Monoprix PDF), C (industrie IFRS SEC),
-D (société US EDGAR), E (société US CP négatifs via EDGAR) seront ajoutés après
-sélection et validation. Chacun aura :
-
-- URL exacte de téléchargement,
-- date de téléchargement,
-- licence ou conditions d'usage,
-- taux de change USD → TND utilisé si conversion (source + date du taux).
 
 Les copies « défauts injectés » seront nommées `defauts_injectes_<fichier_source>.<ext>`.
