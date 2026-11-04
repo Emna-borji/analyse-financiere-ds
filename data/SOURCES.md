@@ -53,6 +53,38 @@ Ce fichier n'est pas une donnée réelle. Les candidats réels pour l'entreprise
 - Couverture : Services, Distribution, Industrie — Q1, médiane, Q3 par ratio.
 - Rôle : fichier de repli du benchmark quand les API ne sont pas accessibles.
 
+## `data/ch1/monoprix_pdfs/*.pdf`
+
+Etats financiers **individuels** annuels de la SNMVT « MONOPRIX »
+(Societe Nouvelle Maison de la Ville de Tunis), publies sur le portail
+de la Bourse de Tunis (BVMT) :
+
+- `mnp-etats-financiers-annuels-individuels-31-12-2022.pdf` : couvre 2022 + 2021.
+  <https://bvmt.com.tn/sites/default/files/societes/monoprix/etats-financiers/mnp-etats-financiers-annuels-individuels-31-12-2022.pdf>
+- `mnp-etats-financiers-annuels-individuels-31-12-2023.pdf` : couvre 2023 + 2022.
+  <https://bvmt.com.tn/sites/default/files/societes/monoprix/etats-financiers/mnp-etats-financiers-annuels-individuels-31-12-2023.pdf>
+- `mnp-etats-financiers-annuels-individuels-31-12-2024.pdf` : couvre 2024 + 2023.
+  (copie du fichier `_base_v1/tests/data/real_monoprix_2024.pdf` deja present
+  dans le depot.)
+
+**Date de telechargement** : 2026-11-04.
+**Format** : SCE tunisien, dinars tunisiens (unite, pas milliers).
+**Licence** : document public, publication reglementaire (depots BVMT).
+**Role** : test de l'adaptateur Monoprix sur 4 exercices (2021-2024), avec
+detection automatique de l'unite et de la devise. Les tests comparent les
+valeurs extraites aux montants publies dans les PDF :
+
+- Revenus 2021 = 618 317 561, 2022 = 627 130 137, 2023 = 684 081 159 TND ;
+- Total bilan 2021 = 247 759 872, 2022 = 264 726 058 TND ;
+- Resultat net 2021 = -429 449, 2022 = -585 002, 2023 = 5 876 040, 2024 = 6 834 166 TND ;
+- Capital social 2023 = 50 691 472 (apres incorporation de reserves de 10,75 MTND
+  en 2023 vs. 39 938 744 en 2022).
+
+Retraitements captures entre PDF successifs : l'adaptateur documente dans
+`EtatsFinanciers.hypotheses` tout ecart entre un comparatif et sa version
+retraitee dans le PDF suivant (ex. reventilation Reserves + Primes vs.
+Autres capitaux propres 2022 dans le PDF 2023).
+
 ## `data/ch1/benchmark_edgar_frames_2023.csv`
 
 - **Télécharge depuis SEC EDGAR Frames API** (<https://data.sec.gov/>).
