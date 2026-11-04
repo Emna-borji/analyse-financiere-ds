@@ -89,21 +89,36 @@ Autres capitaux propres 2022 dans le PDF 2023).
 
 - **Télécharge depuis SEC EDGAR Frames API** (<https://data.sec.gov/>).
 - Date de téléchargement : 2026-11-04.
-- Concepts XBRL utilisés :
-  - `Assets` (instant Q4) — 6 430 sociétés ;
-  - `StockholdersEquity` (instant Q4) — 6 275 sociétés ;
-  - `RevenueFromContractWithCustomerExcludingAssessedTax` (flux annuel)
-    — 3 142 sociétés (balise ASC 606) ;
-  - `NetIncomeLoss` (flux annuel) — 6 389 sociétés.
-- Ratios dérivés : ROA, ROE, marge nette, autonomie financière.
-- Population : **toutes les sociétés US ayant déposé un 10-K pour
-  l'exercice fiscal 2023**. Aucun filtrage sectoriel (biais small cap
+- Concepts XBRL utilisés (bilan = instant Q4, flux = année entière) :
+  - `Assets` (instant Q4)
+  - `StockholdersEquity` (instant Q4)
+  - `AssetsCurrent` (instant Q4) — pour la liquidité générale
+  - `LiabilitiesCurrent` (instant Q4)
+  - `InventoryNet` (instant Q4) — pour la liquidité réduite
+  - `RevenueFromContractWithCustomerExcludingAssessedTax` (flux annuel,
+    balise ASC 606 ; `Revenues` est l'ancien tag et ne couvre plus que
+    ~6 sociétés depuis 2019)
+  - `NetIncomeLoss` (flux annuel)
+- Ratios dérivés : ROA, ROE, marge nette, autonomie financière,
+  liquidité générale, liquidité réduite.
+- **Filtrage** : `end == "2023-12-31"` strict pour ne retenir que les
+  sociétés à exercice calendaire. Cela exclut automatiquement les 10-Q
+  trimestriels (end 31/03, 30/06, 30/09) et les sociétés à exercice
+  décalé (AAR CORP au 31/05, Microsoft au 30/06, etc.).
+- **Provenance 10-K** : la Frames API ne porte pas de champ `form`, mais
+  après filtrage par `end=2023-12-31`, les valeurs proviennent d'un 10-K
+  annuel OU d'un 10-K/A (amendement) OU d'un 10-Q postérieur présentant
+  le 31/12 en comparatif. Les trois citent le même bilan annuel audité.
+  Vérification par échantillon dans
+  `tests/test_benchmark_edgar.py::test_echantillon_depot_10k`.
+- Population après filtrage : 2 268 sociétés US à exercice calendaire
+  pour l'exercice 2023. Aucun filtrage sectoriel (biais small cap
   déficitaire sur ROA médian proche de 0 %).
 - Script d'actualisation :
   `EDGAR_USER_AGENT="Nom (email)" python -m scripts.actualiser_benchmark_edgar 2023`
 - Licence : données publiques SEC, utilisation libre avec User-Agent
   descriptif (cf. <https://www.sec.gov/os/accessing-edgar-data>).
-- Cache local des frames brutes : `.cache/edgar/` (gitignoré, ~3,7 MB).
+- Cache local des frames brutes : `.cache/edgar/` (gitignoré, ~5 MB).
 
 ---
 

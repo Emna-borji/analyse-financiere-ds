@@ -57,13 +57,28 @@ def test_csv_edgar_committed_charge_bien():
     assert chemin.exists(), "Le CSV EDGAR committe doit exister"
 
     ref = charger_benchmark_csv(chemin)
-    # Doit contenir au moins les 4 ratios cles
+    # Doit contenir au moins les 6 ratios cles (rentabilite + liquidite)
     ratios_committed = {r for s, r in ref.keys()}
-    assert {"roa", "roe", "marge_nette", "autonomie_financiere"} <= ratios_committed
+    attendus = {
+        "roa", "roe", "marge_nette", "autonomie_financiere",
+        "liquidite_generale", "liquidite_reduite",
+    }
+    assert attendus <= ratios_committed, (
+        f"Manquants : {attendus - ratios_committed}"
+    )
 
     # Source doit mentionner EDGAR + date
     for r in ref.values():
         assert "EDGAR" in r.source, f"Source attendue mentionne EDGAR, obtenu : {r.source}"
+
+
+def test_liquidite_generale_benchmark_coherente():
+    """La liquidite generale mediane doit etre > 1 (regle de pouce US)."""
+    chemin = RACINE / "data" / "ch1" / "benchmark_edgar_frames_2023.csv"
+    ref = charger_benchmark_csv(chemin)
+    lg = ref[("US_toutes_societes", "liquidite_generale")]
+    assert lg.mediane > 1.0, f"Liquidite generale mediane = {lg.mediane}"
+    assert lg.q1 < lg.mediane < lg.q3
 
 
 def test_societe_x_vs_edgar_committed():
@@ -119,3 +134,33 @@ def test_edgar_live_assets_2023():
     # Chaque entree doit porter cik, val, entityName
     for d in data[:5]:
         assert "cik" in d and "val" in d
+
+
+@pytest.mark.network
+def test_echantillon_depot_10k():
+    """Prend 10 CIK a exercice calendaire (end=2023-12-31) de la frame Assets
+    et confirme via l'API submissions qu'ils ont bien depose un 10-K pour
+    cette accession."""
+    from analyse_financiere.benchmark_edgar import (
+        verifier_depot_10k, _filtrer_fin_annee_civile,
+    )
+    from analyse_financiere.benchmark import charger_edgar_frames
+
+    ua = os.environ.get("EDGAR_USER_AGENT")
+    if not ua:
+        pytest.skip("EDGAR_USER_AGENT non defini — test saute")
+    cache = RACINE / ".cache" / "edgar"
+    data = charger_edgar_frames("Assets", 2023, nature="instant", cache_dir=cache)
+    # Appliquer le MEME filtre que construire_benchmark_edgar
+    filtre = _filtrer_fin_annee_civile(data, 2023)
+    # Echantillon deterministe de 10 CIK pour la reproductibilite
+    echantillon = filtre[:10]
+    assert len(echantillon) == 10
+    non_10k = []
+    for d in echantillon:
+        cik, accn = d["cik"], d["accn"]
+        if not verifier_depot_10k(cik, accn, ua):
+            non_10k.append((cik, accn, d["entityName"]))
+    assert not non_10k, (
+        f"{len(non_10k)}/10 echantillons ne sont pas des 10-K : {non_10k}"
+    )

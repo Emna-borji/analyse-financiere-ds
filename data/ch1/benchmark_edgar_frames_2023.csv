@@ -1,5 +1,7 @@
 secteur,ratio,q1,mediane,q3,source
-US_toutes_societes,roa,-0.33799879700286173,-0.0009158926922264066,0.044123754882087335,"SEC EDGAR Frames API (us-gaap), telecharge 2026-11-04"
-US_toutes_societes,roe,-0.3389710176231659,0.02261971237905182,0.12596793543461665,"SEC EDGAR Frames API (us-gaap), telecharge 2026-11-04"
-US_toutes_societes,marge_nette,-0.3758821241997117,0.00022295076455680258,0.09450372732548026,"SEC EDGAR Frames API (us-gaap), telecharge 2026-11-04"
-US_toutes_societes,autonomie_financiere,0.24198705672819532,0.44976401423363044,0.6744117649192837,"SEC EDGAR Frames API (us-gaap), telecharge 2026-11-04"
+US_toutes_societes,roa,-0.34036344216453956,-0.003160952138026145,0.03886454585254319,"SEC EDGAR Frames API (us-gaap), telecharge 2026-11-04"
+US_toutes_societes,roe,-0.3908665705234741,0.0133494630173068,0.11932376551296661,"SEC EDGAR Frames API (us-gaap), telecharge 2026-11-04"
+US_toutes_societes,marge_nette,-0.46824891311167394,-0.005698260952034624,0.09712993387372566,"SEC EDGAR Frames API (us-gaap), telecharge 2026-11-04"
+US_toutes_societes,autonomie_financiere,0.2303080758409391,0.4474025083433657,0.6755017834390897,"SEC EDGAR Frames API (us-gaap), telecharge 2026-11-04"
+US_toutes_societes,liquidite_generale,0.7715002239140171,1.580356015654589,3.3568675023588086,"SEC EDGAR Frames API (us-gaap), telecharge 2026-11-04"
+US_toutes_societes,liquidite_reduite,0.6297556351904643,1.2816376095064619,2.8857080499072425,"SEC EDGAR Frames API (us-gaap), telecharge 2026-11-04"
