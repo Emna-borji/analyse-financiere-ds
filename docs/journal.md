@@ -66,3 +66,80 @@ Candidats proposés au brief, à valider par l'étudiant avant tout télécharge
   services US à CP négatifs via EDGAR.
 - **Benchmark** : fichiers sectoriels Damodaran (ou EDGAR frames), avec repli
   sur fichier synthétique construit à partir d'eux.
+
+---
+
+## 2026-11-04 — Lots 1 à 7 ch.1 + Lots 1 à 5 ch.2 (Société X complète)
+
+### Ce qui est livré
+
+- **Schéma pivot Pydantic v2** (`analyse_financiere/pivot.py`) : 60+ champs
+  couvrant le bilan (net + brut), l'état de résultat (tous les SIG du ch.2),
+  les éléments hors bilan, les dividendes reconstitués.
+- **Adaptateur SCE Excel 3-feuilles** (`adapters/sce_excel.py`) : reconnaît le
+  motif brute / `Moins : Amortissements` / net et stocke les trois valeurs
+  séparément. Reconstitue `amortissements_cumules`. Charge le YAML de
+  retraitements. Reconstitue les dividendes par variation des CP.
+- **Contrôles qualité** (`quality.py`) : A=P, sous-totaux, signes, CP négatifs,
+  valeurs manquantes critiques, cohérence SIG. 3 niveaux OK/Avert./Bloquant.
+- **Moteur de ratios déclaratif** (`ratios.py` + `config/ratios.yaml`) : 16
+  ratios, AST restreint (pas d'`eval()`), garde-fous (division par zéro,
+  CP négatifs, stocks nuls). Évalue à partir du pivot + variable dérivée
+  `achats_ttc` pour le DPO.
+- **SIG + CAF 2 méthodes** (`sig_caf.py`) : cascade complète, test de
+  concordance, capacité de remboursement, autofinancement.
+- **Reclassement + retraitements** (`reclassement.py` + `config/reclassement.yaml`) :
+  deux modes (C4 condensé / C5 retraité). Crédit-bail, EENE, ventilation
+  hors exploitation. Lineage conservé pour chaque masse.
+- **Typologie** (`typologie.py`) : 6 situations.
+- **Mapping** (`mapping.py` + `config/mapping_libelles.yaml`) : alias + regex
+  + fuzzy (rapidfuzz ≥ 85). Précision/rappel mesurés sur jeu annoté.
+- **Benchmark** (`benchmark.py`) : CSV synthétique (Damodaran + BACH),
+  client SEC EDGAR frames (User-Agent + cache + 10 req/s), centile,
+  z robuste, feu tricolore.
+- **Commentaire** (`commentaire.py`) : 15 règles expertes + Jinja2. Pas
+  de LLM.
+- **Restitution** (`restitution.py` + `app.py`) : rapport HTML autonome
+  avec waterfall SIG en SVG inline + dashboard Streamlit 5 onglets.
+- **Documentation** : `README.md` complet, `docs/GUIDE_COMPREHENSION.md`
+  (lot par lot avec chiffres Société X), `docs/PRESENTATION.md` (plan
+  soutenance 10 min + Q&A probables).
+
+### Tests : 45 verts
+
+- Smoke YAML Société X (lot 0).
+- Common-size 2022/2023 (C1 ch.1).
+- 16 ratios × 2 exercices contre corrigé C2 (ch.1).
+- DIO non applicable (pas de stocks).
+- Contrôles qualité.
+- SIG 2022/2023 contre C1 ch.2.
+- CAF 2 méthodes + capacité remb. contre C2 ch.2.
+- Dividendes + autofinancement contre C3 ch.2.
+- Bilan fonctionnel condensé contre C4 ch.2.
+- Bilan fonctionnel retraité C5 (recalculé, invariant respecté).
+- 6 invariants (A=P, FRNG−BFR=TN, CAF concordance, CB laisse FRNG constant,
+  EENE conservent BFR+TN).
+- Mapping (alias, regex, fuzzy, précision/rappel ≥ 80 %).
+- Benchmark (centile, z robuste, feu).
+- Rapport HTML + commentaire.
+
+### Décisions
+
+- **C5 recalculé** : montré en détail dans `docs/GUIDE_COMPREHENSION.md`.
+  FRNG inchangé par le crédit-bail (invariant). TN passe de −303 040 à −383 040
+  après ajout des EENE (80 000). Dette résiduelle CB = 360 000 (valeur
+  d'origine 600 000 − amort cumulés 240 000).
+- **Benchmark synthétique uniquement** pour l'instant. Le client SEC EDGAR
+  est fonctionnel mais non branché en démo : un appel réel réclame un
+  User-Agent et dépend de la disponibilité réseau.
+- **Entreprises B, C, D, E** : le framework d'adaptateurs est prêt (pattern
+  Strategy, pivot invariant), mais seule la Société X est pleinement
+  implémentée pour la soutenance de demain. Les écritures des 4 autres
+  adaptateurs sont des prochaines étapes clairement balisées.
+
+### Commandes de démo
+
+- `pytest -v` (45 tests verts)
+- `python -m scripts.generer_rapports` (génère `reports/*.html`)
+- `streamlit run app.py` (dashboard sur localhost:8501)
+

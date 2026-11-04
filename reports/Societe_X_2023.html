@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Societe_X — Diagnostic 2023</title>
+  <style>
+    body { font-family: -apple-system, system-ui, 'Segoe UI', sans-serif;
+           max-width: 980px; margin: 2em auto; padding: 0 1em; color: #222; }
+    h1, h2 { color: #1a3a6a; }
+    h1 { border-bottom: 2px solid #1a3a6a; padding-bottom: 0.3em; }
+    h2 { margin-top: 2em; }
+    table { border-collapse: collapse; width: 100%; margin: 1em 0; }
+    th, td { padding: 6px 10px; border: 1px solid #ddd; text-align: left; }
+    th { background: #f5f5f5; }
+    .feu { display: inline-block; width: 12px; height: 12px; border-radius: 50%;
+           vertical-align: middle; margin-right: 6px; }
+    .vert { background: #4caf50; }
+    .orange { background: #ff9800; }
+    .rouge { background: #f44336; }
+    .gris { background: #9e9e9e; }
+    .encart { background: #fff8e1; border-left: 4px solid #ff9800;
+              padding: 0.8em 1.2em; margin: 1em 0; }
+    .force { background: #e8f5e9; border-left: 4px solid #4caf50;
+             padding: 0.5em 1em; margin: 0.5em 0; }
+    .risque { background: #ffebee; border-left: 4px solid #f44336;
+              padding: 0.5em 1em; margin: 0.5em 0; }
+    .meta { color: #666; font-size: 0.9em; }
+  </style>
+</head>
+<body>
+  <h1>Societe_X — Diagnostic financier 2023</h1>
+  <p class="meta">Référentiel : SCE · Devise : TND · Source : CAS_1_Societe_X_SCE_2023_2022.xlsx</p>
+
+  <h2>1. Chiffres clés</h2>
+  <table>
+    <tr><td>Chiffre d'affaires</td><td>4 229 401 TND</td></tr>
+    <tr><td>EBE</td><td>1 628 256 TND</td></tr>
+    <tr><td>Résultat net</td><td>948 657 TND</td></tr>
+    <tr><td>Total actif</td><td>7 965 124 TND</td></tr>
+    <tr><td>Capitaux propres</td><td>2 983 490 TND</td></tr>
+  </table>
+
+  <h2>2. Ratios et feux</h2>
+  <table>
+    <tr><th>Famille</th><th>Ratio</th><th>Valeur</th><th>Repère</th><th></th></tr>
+    
+    <tr>
+      <td>liquidite</td>
+      <td>liquidite_generale</td>
+      <td>1.28</td>
+      <td>> 1.0</td>
+      <td><span class="feu vert"></span></td>
+    </tr>
+    
+    <tr>
+      <td>liquidite</td>
+      <td>liquidite_reduite</td>
+      <td>1.28</td>
+      <td>~ 1.0</td>
+      <td><span class="feu orange"></span></td>
+    </tr>
+    
+    <tr>
+      <td>liquidite</td>
+      <td>liquidite_immediate</td>
+      <td>0.11</td>
+      <td>> 0.2</td>
+      <td><span class="feu rouge"></span></td>
+    </tr>
+    
+    <tr>
+      <td>structure</td>
+      <td>endettement_global</td>
+      <td>1.67</td>
+      <td>< 1.0</td>
+      <td><span class="feu rouge"></span></td>
+    </tr>
+    
+    <tr>
+      <td>structure</td>
+      <td>autonomie_financiere</td>
+      <td>37.5 %</td>
+      <td>> 0.33</td>
+      <td><span class="feu vert"></span></td>
+    </tr>
+    
+    <tr>
+      <td>structure</td>
+      <td>gearing</td>
+      <td>1.34</td>
+      <td>—</td>
+      <td><span class="feu gris"></span></td>
+    </tr>
+    
+    <tr>
+      <td>structure</td>
+      <td>dette_nette_ebitda</td>
+      <td>2.45 ans</td>
+      <td>< 3.0</td>
+      <td><span class="feu vert"></span></td>
+    </tr>
+    
+    <tr>
+      <td>structure</td>
+      <td>couverture_interets</td>
+      <td>6.16</td>
+      <td>> 3.0</td>
+      <td><span class="feu vert"></span></td>
+    </tr>
+    
+    <tr>
+      <td>rentabilite</td>
+      <td>marge_nette</td>
+      <td>22.4 %</td>
+      <td>—</td>
+      <td><span class="feu gris"></span></td>
+    </tr>
+    
+    <tr>
+      <td>rentabilite</td>
+      <td>marge_operationnelle</td>
+      <td>32.3 %</td>
+      <td>—</td>
+      <td><span class="feu gris"></span></td>
+    </tr>
+    
+    <tr>
+      <td>rentabilite</td>
+      <td>marge_ebitda</td>
+      <td>38.5 %</td>
+      <td>—</td>
+      <td><span class="feu gris"></span></td>
+    </tr>
+    
+    <tr>
+      <td>rentabilite</td>
+      <td>roe</td>
+      <td>31.8 %</td>
+      <td>—</td>
+      <td><span class="feu gris"></span></td>
+    </tr>
+    
+    <tr>
+      <td>rentabilite</td>
+      <td>roa</td>
+      <td>11.9 %</td>
+      <td>—</td>
+      <td><span class="feu gris"></span></td>
+    </tr>
+    
+    <tr>
+      <td>activite</td>
+      <td>rotation_actif</td>
+      <td>0.53</td>
+      <td>—</td>
+      <td><span class="feu gris"></span></td>
+    </tr>
+    
+    <tr>
+      <td>activite</td>
+      <td>dso</td>
+      <td>62 j</td>
+      <td>—</td>
+      <td><span class="feu gris"></span></td>
+    </tr>
+    
+    <tr>
+      <td>activite</td>
+      <td>dpo</td>
+      <td>65 j</td>
+      <td>—</td>
+      <td><span class="feu gris"></span></td>
+    </tr>
+    
+    <tr>
+      <td>activite</td>
+      <td>dio</td>
+      <td>n/c</td>
+      <td>—</td>
+      <td><span class="feu gris"></span></td>
+    </tr>
+    
+    <tr>
+      <td>rentabilite</td>
+      <td>taux_effectif_impot</td>
+      <td>18.0 %</td>
+      <td>—</td>
+      <td><span class="feu gris"></span></td>
+    </tr>
+    
+  </table>
+
+  <h2>3. Soldes intermédiaires de gestion</h2>
+  <svg viewBox="0 0 700 300" width="100%" style="max-width:800px"><rect x="90.0" y="20.0" width="42.9" height="240.0" fill="#4caf50" /><text x="111.5" y="290.0" font-size="10" text-anchor="middle">Revenus</text><text x="111.5" y="16.0" font-size="9" text-anchor="middle">4 229 401</text><rect x="143.6" y="260.0" width="42.9" height="101.1" fill="#f44336" /><text x="165.1" y="290.0" font-size="10" text-anchor="middle">− Conso.</text><text x="165.1" y="256.0" font-size="9" text-anchor="middle">-1 780 899</text><rect x="197.3" y="121.1" width="42.9" height="138.9" fill="#2196f3" /><text x="218.7" y="290.0" font-size="10" text-anchor="middle">= VA</text><text x="218.7" y="117.1" font-size="9" text-anchor="middle">2 448 503</text><rect x="250.9" y="260.0" width="42.9" height="46.5" fill="#f44336" /><text x="272.4" y="290.0" font-size="10" text-anchor="middle">− Personnel</text><text x="272.4" y="256.0" font-size="9" text-anchor="middle">-820 246</text><rect x="304.5" y="167.6" width="42.9" height="92.4" fill="#2196f3" /><text x="326.0" y="290.0" font-size="10" text-anchor="middle">= EBE</text><text x="326.0" y="163.6" font-size="9" text-anchor="middle">1 628 256</text><rect x="358.2" y="260.0" width="42.9" height="15.0" fill="#f44336" /><text x="379.6" y="290.0" font-size="10" text-anchor="middle">− Dotations</text><text x="379.6" y="256.0" font-size="9" text-anchor="middle">-264 132</text><rect x="411.8" y="182.6" width="42.9" height="77.4" fill="#2196f3" /><text x="433.3" y="290.0" font-size="10" text-anchor="middle">= REX</text><text x="433.3" y="178.6" font-size="9" text-anchor="middle">1 364 124</text><rect x="465.5" y="260.0" width="42.9" height="11.8" fill="#9e9e9e" /><text x="486.9" y="290.0" font-size="10" text-anchor="middle">± Fin./autres</text><text x="486.9" y="256.0" font-size="9" text-anchor="middle">-207 200</text><rect x="519.1" y="194.3" width="42.9" height="65.7" fill="#2196f3" /><text x="540.5" y="290.0" font-size="10" text-anchor="middle">= RCAI</text><text x="540.5" y="190.3" font-size="9" text-anchor="middle">1 156 924</text><rect x="572.7" y="248.2" width="42.9" height="11.8" fill="#f44336" /><text x="594.2" y="290.0" font-size="10" text-anchor="middle">− Impôt</text><text x="594.2" y="244.2" font-size="9" text-anchor="middle">208 267</text><rect x="626.4" y="206.2" width="42.9" height="53.8" fill="#1976d2" /><text x="647.8" y="290.0" font-size="10" text-anchor="middle">= RN</text><text x="647.8" y="202.2" font-size="9" text-anchor="middle">948 657</text></svg>
+
+  <h2>4. CAF</h2>
+  <table>
+    <tr><td>CAF méthode soustractive</td><td>1 212 789 TND</td></tr>
+    <tr><td>CAF méthode additive</td><td>1 212 789 TND</td></tr>
+    <tr><td>Concordance</td><td>OK</td></tr>
+    <tr><td>Capacité de remboursement</td><td>3.40 années</td></tr>
+    <tr><td>Autofinancement</td><td>550 963 TND</td></tr>
+  </table>
+
+  <h2>5. Bilan fonctionnel</h2>
+  <table>
+    <tr><th></th><th>Sans retraitement</th><th>Retraité (crédit-bail + EENE + hors expl.)</th></tr>
+    <tr><td>Emplois stables</td><td>7 380 353</td><td>7 980 353</td></tr>
+    <tr><td>Ressources stables</td><td>7 781 628</td><td>8 381 628</td></tr>
+    <tr><td><b>FRNG</b></td><td><b>401 275</b></td><td><b>401 275</b></td></tr>
+    <tr><td>BFR</td><td>704 315</td><td>784 315</td></tr>
+    <tr><td>Trésorerie nette</td><td>-303 040</td><td>-383 040</td></tr>
+  </table>
+  <div class="encart">
+    <b>Situation typologique :</b> 2 — FRNG insuffisant.<br>
+    Une partie du BFR est financée par des concours bancaires. Situation fréquente mais à surveiller.
+  </div>
+
+  <h2>6. Diagnostic</h2>
+  <div class="force"><b>Force :</b> Marge nette 22.4 % : rentabilité très au-dessus de la médiane sectorielle usuelle.</div><div class="force"><b>Force :</b> ROE 31.8 % : excellente rémunération des actionnaires.</div>
+  <div class="encart"><b>Attention :</b> Gearing 1.34 > 1 : dette nette supérieure aux capitaux propres.</div><div class="encart"><b>Attention :</b> Dividendes distribués = 55 % de la CAF : l'autofinancement est faible malgré une CAF suffisante.</div><div class="encart"><b>Attention :</b> Situation 2 (FRNG insuffisant) : Une partie du BFR est financée par des concours bancaires. Situation fréquente mais à surveiller.</div>
+  <div class="risque"><b>Risque :</b> Liquidité immédiate 0.11 < 0,2 : seulement 11 % des dettes à CT sont payables immédiatement.</div><div class="risque"><b>Risque :</b> Combinaison liquidité immédiate faible + DPO élevé : forte probabilité de tension de trésorerie à surveiller.</div>
+
+  <p class="meta">Rapport généré par <code>analyse-financiere-ds</code>. Références : PDF Chapitre 1 et Chapitre 2 (Master Data Science — Analyse Financière).</p>
+</body>
+</html>

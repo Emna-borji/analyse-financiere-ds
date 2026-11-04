@@ -21,5 +21,9 @@ Jinja2>=3.1
 # Benchmark par API (lot 5)
 requests>=2.31
 
+# Restitution interactive (lot 7 ch.1 + lot 5 ch.2)
+streamlit>=1.28
+plotly>=5.18
+
 # Tests
 pytest>=8.0

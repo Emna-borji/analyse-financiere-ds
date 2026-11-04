@@ -1,0 +1,177 @@
+# Correspondance libellé → champ pivot (ch.1 lot 2).
+# Alias = match exact (après normalisation). Regex = match par expression.
+# Les postes non reconnus seront journalisés par mapper_liste().
+
+mapping:
+  # ========================================================================
+  # ACTIF
+  # ========================================================================
+  immobilisations_incorporelles_brutes:
+    alias:
+      - "Immobilisations incorporelles"
+      - "Intangible assets"
+      - "Goodwill"
+    regex:
+      - "immob.*incorp"
+
+  immobilisations_corporelles_brutes:
+    alias:
+      - "Immobilisations corporelles"
+      - "Property, plant and equipment"
+      - "PP&E"
+    regex:
+      - "immob.*corp"
+      - "property.*plant.*equipment"
+
+  immobilisations_financieres:
+    alias:
+      - "Immobilisations financières"
+      - "Financial assets"
+      - "Long-term investments"
+
+  actifs_non_courants:
+    alias:
+      - "Total des actifs non courants"
+      - "Total non-current assets"
+      - "Non-current assets"
+
+  stocks:
+    alias:
+      - "Stocks"
+      - "Inventories"
+      - "Inventory, net"
+
+  clients_bruts:
+    alias:
+      - "Clients et comptes rattachés"
+      - "Trade and other receivables"
+      - "Accounts receivable, net"
+
+  autres_actifs_courants:
+    alias:
+      - "Autres actifs courants"
+      - "Other current assets"
+
+  liquidites:
+    alias:
+      - "Liquidités et équivalents de liquidités"
+      - "Cash and cash equivalents"
+      - "Liquidités"
+
+  actifs_courants:
+    alias:
+      - "Total des actifs courants"
+      - "Total current assets"
+
+  actif_total:
+    alias:
+      - "Total des actifs"
+      - "Total assets"
+      - "TOTAL DES ACTIFS"
+
+  # ========================================================================
+  # PASSIF
+  # ========================================================================
+  capital:
+    alias:
+      - "Capital social"
+      - "Common stock"
+      - "Share capital"
+
+  reserves:
+    alias:
+      - "Réserves"
+      - "Retained earnings"
+
+  resultats_reportes:
+    alias:
+      - "Résultats reportés"
+      - "Accumulated deficit"
+
+  capitaux_propres:
+    alias:
+      - "Total des capitaux propres"
+      - "Total des capitaux propres avant affectation"
+      - "Total equity"
+      - "Stockholders' equity"
+      - "Capitaux propres"
+
+  dettes_financieres_lt:
+    alias:
+      - "Emprunts"
+      - "Non-current borrowings"
+      - "Long-term debt"
+
+  fournisseurs:
+    alias:
+      - "Fournisseurs et comptes rattachés"
+      - "Trade payables"
+      - "Trade and other payables"
+      - "Accounts payable"
+
+  dettes_financieres_ct:
+    alias:
+      - "Concours bancaires et autres passifs financiers"
+      - "Short-term debt"
+      - "Current portion of long-term debt"
+
+  autres_passifs_courants:
+    alias:
+      - "Autres passifs courants"
+      - "Other current liabilities"
+
+  passifs_courants:
+    alias:
+      - "Total des passifs courants"
+      - "Total current liabilities"
+
+  # ========================================================================
+  # RÉSULTAT
+  # ========================================================================
+  ca:
+    alias:
+      - "Revenus"
+      - "Revenue"
+      - "Revenues"
+      - "Chiffre d'affaires"
+      - "Net sales"
+
+  achats_approvisionnements:
+    alias:
+      - "Achats d'approvisionnements consommés"
+      - "Cost of goods sold"
+
+  charges_personnel:
+    alias:
+      - "Charges de personnel"
+      - "Personnel expenses"
+      - "Employee benefits"
+
+  dotations:
+    alias:
+      - "Dotations aux provisions et aux amortissements"
+      - "Depreciation and amortization"
+
+  autres_charges_exploitation:
+    alias:
+      - "Autres charges d'exploitation"
+      - "Other operating expenses"
+
+  ebit:
+    alias:
+      - "Résultat d'exploitation"
+      - "Operating profit"
+      - "Operating income"
+      - "RESULTAT D'EXPLOITATION"
+
+  charges_financieres:
+    alias:
+      - "Charges financières nettes"
+      - "Finance costs"
+      - "Interest expense"
+
+  resultat_net:
+    alias:
+      - "Résultat net de l'exercice"
+      - "Profit for the year"
+      - "Net income"
