@@ -17,13 +17,21 @@ import pandas as pd
 import streamlit as st
 
 from analyse_financiere.adapters.sce_excel import charger_societe_x
+from analyse_financiere.benchmark import charger_benchmark_csv
 from analyse_financiere.commentaire import commenter, regles_expertes
 from analyse_financiere.quality import controler, Niveau
 from analyse_financiere.ratios import calculer_ratios
 from analyse_financiere.reclassement import construire_bilan_fonctionnel
 from analyse_financiere.restitution import feu
+from analyse_financiere.scoring import calculer_score, donnees_radar
 from analyse_financiere.sig_caf import calculer_caf, calculer_sig
 from analyse_financiere.typologie import classer
+from analyse_financiere.visualisations import (
+    donnees_evolution_temporelle,
+    donnees_heatmap_centiles,
+    donnees_sankey,
+    exporter_lineage_csv,
+)
 
 
 RACINE = Path(__file__).resolve().parent
@@ -73,8 +81,9 @@ bf_r = construire_bilan_fonctionnel(e, RACINE / "config" / "reclassement.yaml", 
 situation = classer(bf_r.frng, bf_r.bfr, bf_r.tn)
 
 # Onglets
-tab1, tab2, tab3, tab4, tab5 = st.tabs(
-    ["Ratios", "SIG & CAF", "Bilan fonctionnel", "Typologie & diagnostic", "Données brutes"]
+tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(
+    ["Ratios", "SIG & CAF", "Bilan fonctionnel",
+     "Typologie & diagnostic", "Visualisations", "Données brutes"]
 )
 
 with tab1:
@@ -183,5 +192,110 @@ with tab4:
     st.markdown(md)
 
 with tab5:
+    st.subheader("Visualisations avancées")
+    # Charger le benchmark EDGAR
+    bench_path = RACINE / "data" / "ch1" / "benchmark_edgar_frames_2023.csv"
+    if bench_path.exists():
+        bench = charger_benchmark_csv(bench_path)
+    else:
+        bench = {}
+
+    # ---- Radar (score par famille) ----
+    st.markdown("### Radar par famille (vs. benchmark EDGAR)")
+    ratios_map = {r.id: r.valeur for r in ratios}
+    try:
+        score = calculer_score(ratios_map, bench, e.entreprise, e.annee)
+        radar = donnees_radar(score)
+        import plotly.graph_objects as go
+
+        axes = list(radar.keys())
+        valeurs = [radar[a]["score"] for a in axes]
+        valeurs_fermes = valeurs + [valeurs[0]]
+        axes_fermes = axes + [axes[0]]
+        fig = go.Figure()
+        fig.add_trace(go.Scatterpolar(r=valeurs_fermes, theta=axes_fermes, fill="toself",
+                                      name=e.entreprise))
+        fig.update_layout(
+            polar=dict(radialaxis=dict(visible=True, range=[0, 100])),
+            showlegend=False,
+            height=400,
+        )
+        st.plotly_chart(fig, use_container_width=True)
+        st.caption(
+            f"Score global pondéré : **{score.score_global:.1f}/100**  "
+            f"(rentabilité 40 % + solvabilité 30 % + liquidité 30 %)"
+        )
+    except Exception as exc:
+        st.warning(f"Radar indisponible : {exc}")
+
+    # ---- Heatmap centiles ----
+    st.markdown("### Heatmap centiles (ratio × exercice)")
+    ratios_par_annee = {}
+    for an, et in etats.items():
+        ratios_par_annee[an] = {
+            r.id: r.valeur for r in calculer_ratios(et, RACINE / "config" / "ratios.yaml")
+        }
+    df_heat = donnees_heatmap_centiles(ratios_par_annee, bench)
+    if not df_heat.empty:
+        # Heatmap via plotly (pas de dependance matplotlib)
+        import plotly.express as px
+        fig_heat = px.imshow(
+            df_heat, text_auto=".0f", aspect="auto",
+            color_continuous_scale="RdYlGn",
+            zmin=0, zmax=100, labels={"color": "centile"},
+        )
+        fig_heat.update_layout(height=400)
+        st.plotly_chart(fig_heat, use_container_width=True)
+
+    # ---- Evolution temporelle ----
+    st.markdown("### Évolution temporelle")
+    bilans = {
+        an: construire_bilan_fonctionnel(et, RACINE / "config" / "reclassement.yaml")
+        for an, et in etats.items()
+    }
+    df_evo = donnees_evolution_temporelle(etats, bilans)
+    st.line_chart(df_evo[["ca", "frng", "bfr", "tn"]])
+
+    # ---- Sankey (flux postes -> masses) ----
+    st.markdown("### Sankey (postes sources → masses fonctionnelles)")
+    s = donnees_sankey(bf_r)
+    import plotly.graph_objects as go
+    fig_sankey = go.Figure(data=[go.Sankey(
+        node=dict(label=s["nodes"], pad=15, thickness=12),
+        link=dict(source=[l["source"] for l in s["links"]],
+                  target=[l["target"] for l in s["links"]],
+                  value=[l["value"] for l in s["links"]]),
+    )])
+    fig_sankey.update_layout(height=500)
+    st.plotly_chart(fig_sankey, use_container_width=True)
+
+    # ---- Export CSV lineage ----
+    st.markdown("### Export CSV du lineage")
+    import io, csv as _csv
+    buf = io.StringIO()
+    writer = _csv.DictWriter(
+        buf, fieldnames=["annee", "masse", "poste_source", "montant", "retraitement"],
+    )
+    writer.writeheader()
+    for nom_masse in ["emplois_stables", "ressources_stables",
+                      "actif_circulant_exploitation", "actif_circulant_hors_exploitation",
+                      "passif_circulant_exploitation", "passif_circulant_hors_exploitation",
+                      "tresorerie_active", "tresorerie_passive"]:
+        masse = getattr(bf_r, nom_masse)
+        for l in masse.lignes:
+            writer.writerow({
+                "annee": bf_r.annee, "masse": nom_masse,
+                "poste_source": l.poste_source, "montant": l.montant,
+                "retraitement": l.retraitement or "",
+            })
+    st.download_button(
+        "Télécharger le lineage CSV",
+        buf.getvalue().encode("utf-8"),
+        file_name=f"lineage_{e.entreprise}_{e.annee}.csv",
+        mime="text/csv",
+    )
+
+
+with tab6:
     st.subheader("Pivot (JSON)")
     st.json(e.model_dump())
