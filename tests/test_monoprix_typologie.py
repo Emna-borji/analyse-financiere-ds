@@ -32,13 +32,16 @@ def test_quatre_exercices(resultats):
 
 @pytest.mark.parametrize("annee", [2021, 2022, 2023, 2024])
 def test_identite_frng_bfr_tn(resultats, annee):
-    """Invariant FRNG - BFR - TN = 0 (tolerance 2 TND, cf. test_monoprix_adapter.py).
+    """Invariant FRNG - BFR - TN = 0 (tolerance 1 TND exacte observee).
 
-    Les sources PDF publiees en TND arrondies au dinar accumulent jusqu'a
-    2 TND d'ecart lors du calcul par agregation.
+    L'adaptateur Monoprix rend des valeurs entieres (chaque poste arrondi
+    au dinar lors de l'extraction PDF). Agreges sur ES, RS, ACE, PCE, etc.,
+    ils produisent un ecart arithmetique maximal observe de +1 TND (sur 2022).
+    Si ce chiffre augmente dans un futur exercice, il faut revisiter
+    l'adaptateur, pas la tolerance.
     """
     r = resultats[annee]
-    assert abs(r.frng - r.bfr - r.tn) <= 2, (
+    assert abs(r.frng - r.bfr - r.tn) <= 1, (
         f"{annee}: FRNG={r.frng:.2f} BFR={r.bfr:.2f} TN={r.tn:.2f} "
         f"ecart={r.frng - r.bfr - r.tn:+.2f}"
     )
